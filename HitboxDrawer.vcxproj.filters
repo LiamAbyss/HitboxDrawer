@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Fichiers sources">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Fichiers de ressources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="SFGL">
+      <UniqueIdentifier>{d3d6e660-1673-4c62-8c61-8f3d410fe4a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IMGUI">
+      <UniqueIdentifier>{238449d8-ef1c-4d05-9eae-5968d8e3abc0}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SFGL\TransparentWindow.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="SFGL\Scene.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="SFGL\ResourceManager.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="SFGL\Game.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="SFGL\Camera.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="SFGL\BezierCurve.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_demo.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_draw.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_widgets.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI-SFML\imgui-SFML.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_tables.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\ImGuiFileDialog\ImGuiFileDialog.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="IMGUI\imgui_stdlib.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConcavePolygon.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="SFGL\BezierCurve.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="SFGL\Camera.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="SFGL\Game.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="SFGL\JsonHeader\json.hpp">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="SFGL\ResourceManager.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="SFGL\Scene.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="SFGL\TransparentWindow.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\ImGuiFileDialog\ImGuiFileDialog.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="IMGUI\imgui_stdlib.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
