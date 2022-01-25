@@ -1,8 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
-#include "SFGL/Game.h"
+#include "libs/SFGL/SFGL/Game.h"
 #include "imgui.h"
-#include "IMGUI/imgui_stdlib.h"
+#include "libs/IMGUI/imgui_stdlib.h"
 #include "imgui-SFML.h"
 #include "libs/ImGuiFileDialog/ImGuiFileDialog.h"
 

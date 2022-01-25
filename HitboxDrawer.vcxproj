@@ -143,33 +143,31 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="IMGUI-SFML\imgui-SFML.cpp" />
-    <ClCompile Include="IMGUI\imgui.cpp" />
-    <ClCompile Include="IMGUI\imgui_demo.cpp" />
-    <ClCompile Include="IMGUI\imgui_draw.cpp" />
-    <ClCompile Include="IMGUI\imgui_stdlib.cpp" />
-    <ClCompile Include="IMGUI\imgui_tables.cpp" />
-    <ClCompile Include="IMGUI\imgui_widgets.cpp" />
+    <ClCompile Include="libs\IMGUI-SFML\imgui-SFML.cpp" />
     <ClCompile Include="libs\ImGuiFileDialog\ImGuiFileDialog.cpp" />
+    <ClCompile Include="libs\IMGUI\imgui.cpp" />
+    <ClCompile Include="libs\IMGUI\imgui_demo.cpp" />
+    <ClCompile Include="libs\IMGUI\imgui_draw.cpp" />
+    <ClCompile Include="libs\IMGUI\imgui_stdlib.cpp" />
+    <ClCompile Include="libs\IMGUI\imgui_tables.cpp" />
+    <ClCompile Include="libs\IMGUI\imgui_widgets.cpp" />
+    <ClCompile Include="libs\SFGL\SFGL\Camera.cpp" />
+    <ClCompile Include="libs\SFGL\SFGL\Game.cpp" />
+    <ClCompile Include="libs\SFGL\SFGL\ResourceManager.cpp" />
+    <ClCompile Include="libs\SFGL\SFGL\Scene.cpp" />
+    <ClCompile Include="libs\SFGL\SFGL\TransparentWindow.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SFGL\BezierCurve.cpp" />
-    <ClCompile Include="SFGL\Camera.cpp" />
-    <ClCompile Include="SFGL\Game.cpp" />
-    <ClCompile Include="SFGL\ResourceManager.cpp" />
-    <ClCompile Include="SFGL\Scene.cpp" />
-    <ClCompile Include="SFGL\TransparentWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConcavePolygon.h" />
-    <ClInclude Include="IMGUI\imgui_stdlib.h" />
     <ClInclude Include="libs\ImGuiFileDialog\ImGuiFileDialog.h" />
-    <ClInclude Include="SFGL\BezierCurve.h" />
-    <ClInclude Include="SFGL\Camera.h" />
-    <ClInclude Include="SFGL\Game.h" />
-    <ClInclude Include="SFGL\JsonHeader\json.hpp" />
-    <ClInclude Include="SFGL\ResourceManager.h" />
-    <ClInclude Include="SFGL\Scene.h" />
-    <ClInclude Include="SFGL\TransparentWindow.h" />
+    <ClInclude Include="libs\IMGUI\imgui_stdlib.h" />
+    <ClInclude Include="libs\SFGL\SFGL\Camera.h" />
+    <ClInclude Include="libs\SFGL\SFGL\Game.h" />
+    <ClInclude Include="libs\SFGL\SFGL\JsonHeader\json.hpp" />
+    <ClInclude Include="libs\SFGL\SFGL\ResourceManager.h" />
+    <ClInclude Include="libs\SFGL\SFGL\Scene.h" />
+    <ClInclude Include="libs\SFGL\SFGL\TransparentWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

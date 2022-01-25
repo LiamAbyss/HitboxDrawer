@@ -24,79 +24,73 @@
     <ClCompile Include="main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
-    <ClCompile Include="SFGL\TransparentWindow.cpp">
-      <Filter>SFGL</Filter>
+    <ClCompile Include="libs\IMGUI\imgui.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="SFGL\Scene.cpp">
-      <Filter>SFGL</Filter>
+    <ClCompile Include="libs\IMGUI\imgui_demo.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="SFGL\ResourceManager.cpp">
-      <Filter>SFGL</Filter>
+    <ClCompile Include="libs\IMGUI\imgui_draw.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="SFGL\Game.cpp">
-      <Filter>SFGL</Filter>
+    <ClCompile Include="libs\IMGUI\imgui_stdlib.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="SFGL\Camera.cpp">
-      <Filter>SFGL</Filter>
+    <ClCompile Include="libs\IMGUI\imgui_tables.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="SFGL\BezierCurve.cpp">
-      <Filter>SFGL</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_demo.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_draw.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_widgets.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI-SFML\imgui-SFML.cpp">
-      <Filter>Fichiers sources</Filter>
-    </ClCompile>
-    <ClCompile Include="IMGUI\imgui_tables.cpp">
-      <Filter>Fichiers sources</Filter>
+    <ClCompile Include="libs\IMGUI\imgui_widgets.cpp">
+      <Filter>IMGUI</Filter>
     </ClCompile>
     <ClCompile Include="libs\ImGuiFileDialog\ImGuiFileDialog.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="IMGUI\imgui_stdlib.cpp">
+    <ClCompile Include="libs\SFGL\SFGL\Camera.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\SFGL\Game.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\SFGL\ResourceManager.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\SFGL\Scene.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\SFGL\TransparentWindow.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\IMGUI-SFML\imgui-SFML.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libs\SFGL\SFGL\Camera.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\SFGL\Game.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\SFGL\JsonHeader\json.hpp">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\SFGL\ResourceManager.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\SFGL\Scene.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\SFGL\TransparentWindow.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
     <ClInclude Include="ConcavePolygon.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="SFGL\BezierCurve.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="SFGL\Camera.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="SFGL\Game.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="SFGL\JsonHeader\json.hpp">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="SFGL\ResourceManager.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="SFGL\Scene.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="SFGL\TransparentWindow.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
     <ClInclude Include="libs\ImGuiFileDialog\ImGuiFileDialog.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+      <Filter>IMGUI</Filter>
     </ClInclude>
-    <ClInclude Include="IMGUI\imgui_stdlib.h">
-      <Filter>Fichiers d%27en-tête</Filter>
+    <ClInclude Include="libs\IMGUI\imgui_stdlib.h">
+      <Filter>IMGUI</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
