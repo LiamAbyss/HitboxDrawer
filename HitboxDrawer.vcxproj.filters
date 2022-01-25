@@ -61,7 +61,7 @@
       <Filter>SFGL</Filter>
     </ClCompile>
     <ClCompile Include="libs\IMGUI-SFML\imgui-SFML.cpp">
-      <Filter>Fichiers sources</Filter>
+      <Filter>IMGUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
