@@ -5,6 +5,7 @@
 #include "libs/IMGUI/imgui_stdlib.h"
 #include "imgui-SFML.h"
 #include "libs/ImGuiFileDialog/ImGuiFileDialog.h"
+#include "ConcavePolygon.h"
 
 #define CANVAS_SIZE 900.F
 #define SPRITEX 470.F
@@ -92,6 +93,19 @@ class MainActivity : public Scene
         if (ev.type == sf::Event::MouseMoved || ev.type == sf::Event::MouseButtonReleased)
         {
             sf::Vector2f pos = (sf::Vector2f)sf::Mouse::getPosition(window());
+
+            //std::cout << "Real pos : " << pos.x << " " << pos.y << std::endl;
+
+            // To export
+            pos.x = static_cast<int>((pos.x - SPRITEX) / factor);
+            pos.y = static_cast<int>((pos.y - SPRITEY) / factor);
+
+            // To import
+            pos.x = SPRITEX + (pos.x * factor);
+            pos.y = SPRITEY + (pos.y * factor);
+
+            //std::cout << "Fake pos : " << pos.x << " " << pos.y << std::endl;
+
             auto& boxes = frames[id].boxes;
             if (!boxes.empty())
             {
@@ -346,7 +360,6 @@ class MainActivity : public Scene
             updateTexture();
         }
         ImGui::SetCursorPos({ 335,120.f });
-        if (id > nFrames - 1) id = 0;
         if (ImGui::Button(">", { 30.f,19.f }))
         {
             if (id >= nFrames - 1) id = 0;
@@ -379,7 +392,7 @@ class MainActivity : public Scene
             Hitbox h;
             h.vertices = sf::VertexArray(sf::PrimitiveType::LineStrip);
             h.isHurtbox = isHurtbox;
-            if (drawing || boxes.size() == 0)
+            if (drawing || boxes.size() == 0 || boxes[boxes.size() - 1].vertices.getVertexCount() != 0)
                 boxes.push_back(h);
             else
                 boxes[boxes.size() - 1] = h;
@@ -471,6 +484,7 @@ class MainActivity : public Scene
     {
         if (frames.size() != nFrames)
         {
+            id = 0;
             frames.resize(nFrames);
 
             for (auto& f : frames)
@@ -492,9 +506,10 @@ class MainActivity : public Scene
         {*/
             if (frameWidth / limit > height / limit)
             {
-                factor = limit / frameWidth;
+                factor = floor(limit / frameWidth);
             }
-            else factor = limit / height;
+            else factor = floor(limit / height);
+            if (factor == 0) factor = limit / frameWidth;
         //}
 
         sprite.setScale(factor, factor);
@@ -509,7 +524,6 @@ class MainActivity : public Scene
 
     virtual void render() override
     {
-        window().clear();
         window().draw(canvas);
         ImGui::SFML::Render(window());
         window().draw(sprite);
@@ -532,7 +546,6 @@ class MainActivity : public Scene
         window().draw(crosshairy);
         if (drawing)
             window().draw(circle);
-        window().display();
     }
 
     void importHitboxes(const std::string& filename)
@@ -633,7 +646,10 @@ class MainActivity : public Scene
         jEntity["name"] = entity;
         jEntity["path"] = filename;
         json jFrames = json::array();
-        for (const auto& f : frames)
+
+        auto convexFrames = getConcaveFrames();
+
+        for (const auto& f : convexFrames)
         {
             json jFrameBoxes = json::array();
             for (int j = 0; j < f.boxes.size(); j++)
@@ -670,6 +686,58 @@ class MainActivity : public Scene
             file << j.dump(4) << std::endl;
             file.close();
         }
+    }
+
+    std::vector<Frame> getConcaveFrames()
+    {
+        std::vector<Frame> resultFrames;
+
+        for (const auto& f : frames)
+        {
+            std::vector<Hitbox> resultBoxes;
+            for (const auto& b : f.boxes)
+            {
+                Hitbox h;
+                h.isHurtbox = b.isHurtbox;
+
+                if (b.vertices.getVertexCount() > 0)
+                {
+                    // Create vertices
+                    std::vector<cxd::Vertex> vertices;
+                    for (int i = 0; i < b.vertices.getVertexCount(); i++)
+                    {
+                        const auto& v = b.vertices[i];
+                        vertices.push_back(cxd::Vec2({ v.position.x, v.position.y }));
+                    }
+
+                    // Create polygon from these vertices
+                    cxd::ConcavePolygon concavePoly(vertices);
+                    // Perform convex decomposition on polygon
+                    concavePoly.convexDecomp();
+
+                    // Create a vector and retrieve all convex subpolygons
+                    // as a single list
+                    std::vector<cxd::ConcavePolygon> subPolygonList;
+                    concavePoly.returnLowestLevelPolys(subPolygonList);
+
+                    for (const auto& p : subPolygonList)
+                    {
+                        h.vertices.clear();
+                        for (const auto& v : p.getVertices())
+                        {
+                            h.vertices.append(sf::Vertex(sf::Vector2f((float)v.position.x, (float)v.position.y), h.isHurtbox ? sf::Color::Red : sf::Color::Blue));
+                        }
+
+                        if (h.vertices[h.vertices.getVertexCount() - 1].position != h.vertices[0].position)
+                            h.vertices.append(h.vertices[0]);
+                        resultBoxes.push_back(h);
+                    }
+                }
+            }
+            resultFrames.push_back(Frame({resultBoxes}));
+        }
+
+        return resultFrames;
     }
 };
 
