@@ -45,44 +45,26 @@
     <ClCompile Include="libs\ImGuiFileDialog\ImGuiFileDialog.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
-    <ClCompile Include="libs\SFGL\SFGL\Camera.cpp">
-      <Filter>SFGL</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\SFGL\SFGL\Game.cpp">
-      <Filter>SFGL</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\SFGL\SFGL\ResourceManager.cpp">
-      <Filter>SFGL</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\SFGL\SFGL\Scene.cpp">
-      <Filter>SFGL</Filter>
-    </ClCompile>
-    <ClCompile Include="libs\SFGL\SFGL\TransparentWindow.cpp">
-      <Filter>SFGL</Filter>
-    </ClCompile>
     <ClCompile Include="libs\IMGUI-SFML\imgui-SFML.cpp">
       <Filter>IMGUI</Filter>
     </ClCompile>
+    <ClCompile Include="libs\SFGL\TransparentWindow.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\Scene.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\ResourceManager.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\Game.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
+    <ClCompile Include="libs\SFGL\Camera.cpp">
+      <Filter>SFGL</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="libs\SFGL\SFGL\Camera.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\SFGL\SFGL\Game.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\SFGL\SFGL\JsonHeader\json.hpp">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\SFGL\SFGL\ResourceManager.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\SFGL\SFGL\Scene.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
-    <ClInclude Include="libs\SFGL\SFGL\TransparentWindow.h">
-      <Filter>SFGL</Filter>
-    </ClInclude>
     <ClInclude Include="ConcavePolygon.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
@@ -91,6 +73,24 @@
     </ClInclude>
     <ClInclude Include="libs\IMGUI\imgui_stdlib.h">
       <Filter>IMGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\TransparentWindow.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\Scene.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\ResourceManager.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\JsonHeader\json.hpp">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\Game.h">
+      <Filter>SFGL</Filter>
+    </ClInclude>
+    <ClInclude Include="libs\SFGL\Camera.h">
+      <Filter>SFGL</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

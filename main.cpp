@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <sstream>
-#include "libs/SFGL/SFGL/Game.h"
+#include "libs/SFGL/Game.h"
 #include "imgui.h"
 #include "libs/IMGUI/imgui_stdlib.h"
 #include "imgui-SFML.h"
@@ -86,182 +86,179 @@ class MainActivity : public Scene
         }
     }
 
+    sf::Vector2f getMousePosRelativeToFactor()
+    {
+        sf::Vector2f pos = (sf::Vector2f)sf::Mouse::getPosition(window());
+
+        //std::cout << "Real pos : " << pos.x << " " << pos.y << std::endl;
+
+        // To export
+        pos.x = static_cast<float>(static_cast<int>((pos.x - SPRITEX) / factor));
+        pos.y = static_cast<float>(static_cast<int>((pos.y - SPRITEY) / factor));
+
+        // To import
+        pos.x = SPRITEX + (pos.x * factor);
+        pos.y = SPRITEY + (pos.y * factor);
+
+        return pos;
+    }
+
+    sf::Vector2f getAltMajPos(const sf::Vector2f& lastPos, const sf::Vector2f& pos)
+    {
+        sf::Vector2f res = pos;
+        if (abs(lastPos.x - pos.x) > abs(lastPos.y - pos.y))
+            res.y = lastPos.y;
+        else
+            res.x = lastPos.x;
+        return res;
+    }
+
     virtual void update(sf::Time dt, sf::Event& ev) override
     {
         ImGui::SFML::ProcessEvent(ev);
 
         if (ev.type == sf::Event::MouseMoved || ev.type == sf::Event::MouseButtonReleased)
         {
-            sf::Vector2f pos = (sf::Vector2f)sf::Mouse::getPosition(window());
-
-            //std::cout << "Real pos : " << pos.x << " " << pos.y << std::endl;
-
-            // To export
-            pos.x = static_cast<int>((pos.x - SPRITEX) / factor);
-            pos.y = static_cast<int>((pos.y - SPRITEY) / factor);
-
-            // To import
-            pos.x = SPRITEX + (pos.x * factor);
-            pos.y = SPRITEY + (pos.y * factor);
-
-            //std::cout << "Fake pos : " << pos.x << " " << pos.y << std::endl;
+            sf::Vector2f pos = getMousePosRelativeToFactor();
+            if (!canvas.getGlobalBounds().contains(pos)) return;
 
             auto& boxes = frames[id].boxes;
-            if (!boxes.empty())
+            if (boxes.empty()) return;
+
+            sf::VertexArray& v = boxes[boxes.size() - 1].vertices;
+            if (drawing)
             {
-                sf::VertexArray& v = boxes[boxes.size() - 1].vertices;
-                if (canvas.getGlobalBounds().contains(pos))
+                // Vertical or horizontal
+                if (v.getVertexCount() > 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
                 {
-                    if (drawing)
+                    sf::Vector2f lastPos = v[v.getVertexCount() - 2].position;
+                    pos = getAltMajPos(lastPos, pos);
+                }
+
+                for (int i = 0; i < crosshairx.getVertexCount(); i++)
+                {
+                    crosshairx[i].position.x = pos.x;
+                    crosshairy[i].position.y = pos.y;                            
+                }
+
+                circle.setPosition(pos);
+                if (v.getVertexCount() > 0)
+                {
+                    v[v.getVertexCount() - 1].position = pos;
+                    v[v.getVertexCount() - 1].color = circle.getFillColor();
+                }
+
+                if (ev.type == sf::Event::MouseButtonReleased)
+                {
+                    if (v.getVertexCount() == 0)
                     {
-                        // Vertical or horizontal
-                        if (v.getVertexCount() > 0 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-                        {
-                            sf::Vector2f lastPos = v[v.getVertexCount() - 2].position;
-                            if (abs(lastPos.x - pos.x) > abs(lastPos.y - pos.y))
-                                pos.y = lastPos.y;
-                            else
-                                pos.x = lastPos.x;
-                        }
-
-                        for (int i = 0; i < crosshairx.getVertexCount(); i++)
-                        {
-                            crosshairx[i].position.x = pos.x;
-                            crosshairy[i].position.y = pos.y;                            
-                        }
-
-                        circle.setPosition(pos);
-                        if (v.getVertexCount() > 0)
-                        {
-                            v[v.getVertexCount() - 1].position = pos;
-                            v[v.getVertexCount() - 1].color = circle.getFillColor();
-                        }
-
-                        if (ev.type == sf::Event::MouseButtonReleased)
-                        {
-                            if (v.getVertexCount() == 0)
-                            {
-                                v.append(sf::Vertex(pos, circle.getFillColor()));
-                            }
-                            v.append(sf::Vertex(pos, circle.getFillColor()));
-                        }
+                        v.append(sf::Vertex(pos, circle.getFillColor()));
                     }
-                    else
+                    v.append(sf::Vertex(pos, circle.getFillColor()));
+                }
+            }
+            else
+            {
+                // Can move points
+                if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    sf::VertexArray v2;
+                    if (selectedPoint == -1)
                     {
-                        // Can move points
-                        if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                        bool stop = false;
+                        selectedBox = 0;
+                        selectedPoint = 0;
+                        for (auto& b : boxes)
                         {
-                            sf::VertexArray v2;
-                            if (selectedPoint == -1)
-                            {
-                                bool stop = false;
-                                selectedBox = 0;
-                                selectedPoint = 0;
-                                for (auto& b : boxes)
-                                {
-                                    v2 = b.vertices;
+                            v2 = b.vertices;
 
-                                    for (int i = 0; i < v2.getVertexCount(); i++)
+                            for (int i = 0; i < v2.getVertexCount(); i++)
+                            {
+                                if (dist2(pos, v2[i].position) <= 16)
+                                {
+                                    //// Vertical or horizontal
+                                    if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
                                     {
-                                        if (dist2(pos, v2[i].position) <= 16)
-                                        {
-                                            //// Vertical or horizontal
-                                            if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-                                            {
-                                                sf::Vector2f lastPos;
-                                                if (i == 0)
-                                                    lastPos = v2[v2.getVertexCount() - 2].position;
-                                                else
-                                                    lastPos = v2[i - 1].position;
-                                                if (abs(lastPos.x - pos.x) > abs(lastPos.y - pos.y))
-                                                    pos.y = lastPos.y;
-                                                else
-                                                    pos.x = lastPos.x;
-                                            }
-                                            if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-                                            {
-                                                sf::Vector2f nextPos;
-                                                if (i == v2.getVertexCount() - 1)
-                                                    nextPos = v2[1].position;
-                                                else
-                                                    nextPos = v2[i + 1].position;
-                                                if (abs(nextPos.x - pos.x) > abs(nextPos.y - pos.y))
-                                                    pos.y = nextPos.y;
-                                                else
-                                                    pos.x = nextPos.x;
-                                            }
-
-                                            b.vertices[i].position = pos;
-
-                                            if (i == v2.getVertexCount() - 1)
-                                                b.vertices[0].position = pos;
-                                            else if (i == 0)
-                                                b.vertices[v2.getVertexCount() - 1].position = pos;
-                                            stop = true;
-                                            break;
-                                        }
-                                        selectedPoint++;
+                                        sf::Vector2f lastPos;
+                                        if (i == 0)
+                                            lastPos = v2[v2.getVertexCount() - 2].position;
+                                        else
+                                            lastPos = v2[i - 1].position;
+                                        pos = getAltMajPos(lastPos, pos);
                                     }
-                                    if (stop) break;
-                                    selectedBox++;
-                                    selectedPoint = 0;
+                                    if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+                                    {
+                                        sf::Vector2f nextPos;
+                                        if (i == v2.getVertexCount() - 1)
+                                            nextPos = v2[1].position;
+                                        else
+                                            nextPos = v2[i + 1].position;
+                                        pos = getAltMajPos(nextPos, pos);
+                                    }
+
+                                    b.vertices[i].position = pos;
+
+                                    if (i == v2.getVertexCount() - 1)
+                                        b.vertices[0].position = pos;
+                                    else if (i == 0)
+                                        b.vertices[v2.getVertexCount() - 1].position = pos;
+                                    stop = true;
+                                    break;
                                 }
-                                if (!stop)
-                                {
-                                    selectedBox = -1;
-                                    selectedPoint = -1;
-                                }
+                                selectedPoint++;
                             }
-                            else
-                            {
-                                v2 = boxes[selectedBox].vertices;
-
-                                //// Vertical or horizontal
-                                if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-                                {
-                                    sf::Vector2f lastPos;
-                                    if (selectedPoint == 0)
-                                        lastPos = v2[v2.getVertexCount() - 2].position;
-                                    else
-                                        lastPos = v2[selectedPoint - 1].position;
-                                    if (abs(lastPos.x - pos.x) > abs(lastPos.y - pos.y))
-                                        pos.y = lastPos.y;
-                                    else
-                                        pos.x = lastPos.x;
-                                }
-                                if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
-                                {
-                                    sf::Vector2f nextPos;
-                                    if (selectedPoint == v2.getVertexCount() - 1)
-                                        nextPos = v2[1].position;
-                                    else
-                                        nextPos = v2[selectedPoint + 1].position;
-                                    if (abs(nextPos.x - pos.x) > abs(nextPos.y - pos.y))
-                                        pos.y = nextPos.y;
-                                    else
-                                        pos.x = nextPos.x;
-                                }
-
-                                boxes[selectedBox].vertices[selectedPoint].position = pos;
-
-                                if (selectedPoint == v2.getVertexCount() - 1)
-                                    boxes[selectedBox].vertices[0].position = pos;
-                                else if (selectedPoint == 0)
-                                    boxes[selectedBox].vertices[v2.getVertexCount() - 1].position = pos;
-                            }
-
-                            for (int i = 0; i < crosshairx.getVertexCount(); i++)
-                            {
-                                crosshairx[i].position.x = pos.x;
-                                crosshairy[i].position.y = pos.y;
-                            }
+                            if (stop) break;
+                            selectedBox++;
+                            selectedPoint = 0;
                         }
-                        else
+                        if (!stop)
                         {
                             selectedBox = -1;
                             selectedPoint = -1;
                         }
                     }
+                    else
+                    {
+                        v2 = boxes[selectedBox].vertices;
+
+                        //// Vertical or horizontal
+                        if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                        {
+                            sf::Vector2f lastPos;
+                            if (selectedPoint == 0)
+                                lastPos = v2[v2.getVertexCount() - 2].position;
+                            else
+                                lastPos = v2[selectedPoint - 1].position;
+                            pos = getAltMajPos(lastPos, pos);
+                        }
+                        if (v2.getVertexCount() > 1 && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl))
+                        {
+                            sf::Vector2f nextPos;
+                            if (selectedPoint == v2.getVertexCount() - 1)
+                                nextPos = v2[1].position;
+                            else
+                                nextPos = v2[selectedPoint + 1].position;
+                            pos = getAltMajPos(nextPos, pos);
+                        }
+
+                        boxes[selectedBox].vertices[selectedPoint].position = pos;
+
+                        if (selectedPoint == v2.getVertexCount() - 1)
+                            boxes[selectedBox].vertices[0].position = pos;
+                        else if (selectedPoint == 0)
+                            boxes[selectedBox].vertices[v2.getVertexCount() - 1].position = pos;
+                    }
+
+                    for (int i = 0; i < crosshairx.getVertexCount(); i++)
+                    {
+                        crosshairx[i].position.x = pos.x;
+                        crosshairy[i].position.y = pos.y;
+                    }
+                }
+                else
+                {
+                    selectedBox = -1;
+                    selectedPoint = -1;
                 }
             }
         }
@@ -288,8 +285,8 @@ class MainActivity : public Scene
     void drawGui()
     {
         auto& boxes = frames[id].boxes;
-        /*ImGui::SetNextWindowSize({ 450,525.f });
-            ImGui::SetCursorPos({ 0, 0 });*/
+        ImGui::SetNextWindowSize({ 450,920 }, ImGuiCond_::ImGuiCond_Always);
+        ImGui::SetNextWindowPos({ 0, 0 }, ImGuiCond_::ImGuiCond_Always);
         ImGui::Begin("Settings", NULL,
             ImGuiWindowFlags_::ImGuiWindowFlags_NoResize |
             ImGuiWindowFlags_::ImGuiWindowFlags_NoMove
@@ -301,7 +298,7 @@ class MainActivity : public Scene
             ImGuiFileDialog::Instance()->OpenDialog("browse", "Choose File", ".png,.jpg,.jpeg,.bmp,.gif,.tga", ".");
 
         // display
-        if (ImGuiFileDialog::Instance()->Display("browse"))
+        if (ImGuiFileDialog::Instance()->Display("browse", 32, ImVec2(500, 400)))
         {
             // action if OK
             if (ImGuiFileDialog::Instance()->IsOk())
@@ -438,7 +435,7 @@ class MainActivity : public Scene
             ImGuiFileDialog::Instance()->OpenDialog("import", "Choose file", ".json", ".");
 
         // display
-        if (ImGuiFileDialog::Instance()->Display("import"))
+        if (ImGuiFileDialog::Instance()->Display("import", 32, ImVec2(500, 400)))
         {
             // action if OK
             if (ImGuiFileDialog::Instance()->IsOk())
@@ -456,7 +453,7 @@ class MainActivity : public Scene
             ImGuiFileDialog::Instance()->OpenDialog("export", "Choose Folder", NULL, ".");
 
         // display
-        if (ImGuiFileDialog::Instance()->Display("export"))
+        if (ImGuiFileDialog::Instance()->Display("export", 32, ImVec2(500, 400)))
         {
             // action if OK
             if (ImGuiFileDialog::Instance()->IsOk())
@@ -688,6 +685,71 @@ class MainActivity : public Scene
         }
     }
 
+    std::vector<cxd::ConcavePolygon> convexDecomp(const sf::VertexArray& vert)
+    {
+        // Create vertices
+        std::vector<cxd::Vertex> vertices;
+        for (int i = 0; i < vert.getVertexCount(); i++)
+        {
+            const auto& v = vert[i];
+            vertices.push_back(cxd::Vec2({ v.position.x, v.position.y }));
+        }
+
+        // Create polygon from these vertices
+        cxd::ConcavePolygon concavePoly(vertices);
+        // Perform convex decomposition on polygon
+        concavePoly.convexDecomp();
+
+        // Create a vector and retrieve all convex subpolygons
+        // as a single list
+        std::vector<cxd::ConcavePolygon> subPolygonList;
+        concavePoly.returnLowestLevelPolys(subPolygonList);
+
+        return subPolygonList;
+    }
+
+    /*std::vector<Hitbox> convexDecomp2(const sf::VertexArray& vert)
+    {
+        cPolygon poly;
+        for (int i = 0; i < vert.getVertexCount(); i++)
+            poly.push(Point(vert[i].position.x, vert[i].position.y));
+
+        poly.makeCCW();
+        
+        EdgeList diags = poly.decomp();
+        std::vector<cPolygon> remaining = { poly };
+        std::vector<cPolygon> polys;
+
+        for (auto& diag : diags)
+        {
+            Point p1 = diag.first;
+            Point p2 = diag.second;
+
+            int remainingId = 0;
+            while (std::find(remaining[remainingId].tp.begin(), remaining[remainingId].tp.end(), p1) == remaining[remainingId].tp.end())
+                remainingId++;
+
+            cPolygon& currPoly = remaining[remainingId];
+
+            int pId = std::distance(
+                currPoly.tp.begin(),
+                std::find(currPoly.tp.begin(), currPoly.tp.end(), p1)
+            ) + 1;
+
+            cPolygon builder;
+            builder.push(p1);
+            do
+            {
+                if (pId > currPoly.tp.size() - 1)
+                    pId = 0;
+                builder.push(currPoly.tp[pId]);
+                pId++;
+            } while (currPoly.tp[pId].x != p1.x && currPoly.tp[pId].y != p1.y || currPoly.tp[pId].x != p2.x && currPoly.tp[pId].y != p2.y);
+
+        }
+
+    }*/
+
     std::vector<Frame> getConcaveFrames()
     {
         std::vector<Frame> resultFrames;
@@ -702,30 +764,14 @@ class MainActivity : public Scene
 
                 if (b.vertices.getVertexCount() > 0)
                 {
-                    // Create vertices
-                    std::vector<cxd::Vertex> vertices;
-                    for (int i = 0; i < b.vertices.getVertexCount(); i++)
-                    {
-                        const auto& v = b.vertices[i];
-                        vertices.push_back(cxd::Vec2({ v.position.x, v.position.y }));
-                    }
-
-                    // Create polygon from these vertices
-                    cxd::ConcavePolygon concavePoly(vertices);
-                    // Perform convex decomposition on polygon
-                    concavePoly.convexDecomp();
-
-                    // Create a vector and retrieve all convex subpolygons
-                    // as a single list
-                    std::vector<cxd::ConcavePolygon> subPolygonList;
-                    concavePoly.returnLowestLevelPolys(subPolygonList);
+                    auto subPolygonList = convexDecomp(b.vertices);
 
                     for (const auto& p : subPolygonList)
                     {
                         h.vertices.clear();
                         for (const auto& v : p.getVertices())
                         {
-                            h.vertices.append(sf::Vertex(sf::Vector2f((float)v.position.x, (float)v.position.y), h.isHurtbox ? sf::Color::Red : sf::Color::Blue));
+                            h.vertices.append(sf::Vertex(sf::Vector2f((float)v.position.x, (float)v.position.y)));
                         }
 
                         if (h.vertices[h.vertices.getVertexCount() - 1].position != h.vertices[0].position)
